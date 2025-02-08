@@ -1,18 +1,30 @@
 //server.jsdki controllerkoduburaya tasinvak
 import createHttpError from "http-errors";
 import { createContact,updateContact,deleteContact, getContactById, getAllContacts } from "../services/contacts.js"
-
+import { parsePaginationParams } from "../utils/parsePaginationParams.js";
+import { parseSortParams } from "../utils/parseSortParams.js";
+import { parseFilterParams } from "../utils/parseFilterParams.js";
 export const getContactsController = async(req,res)=>{
     
     try{
-        const contacts = await getAllContacts();
+        const {page, perPage} = parsePaginationParams(req.query);
+        const {sortBy, sortOrder} = parseSortParams(req.params);
+        const filter = parseFilterParams(req.query);
 
+        const contacts = await getAllContacts({page, perPage, sortBy, sortOrder, filter});
         res.status(200).json({
             status: 200,
             message: "Successfully found contacts!",
-            data: contacts,
-                // İstek işlenmesi sonucunda elde edilen iletişimler dizisi
-        });
+            data: {
+                "data": [contacts],
+                "page": page,
+                "perPage": perPage,
+                "totalItems": 6,
+                "totalPages": 2,
+                "hasPreviousPage": true,
+                "hasNextPage": false
+            }
+     });
     }catch(error){
         res.status(500).json({
             status: 500,
