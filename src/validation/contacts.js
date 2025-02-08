@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 export const contactSchema = Joi.object({
-    name: Joi.string()
+    name: Joi.string().min(3).max(20)
         .required()
         .messages({
             'string.base': 'Name must be a text.',
@@ -9,7 +9,7 @@ export const contactSchema = Joi.object({
             'any.required': 'Name is required.'
         }),
 
-    phoneNumber: Joi.string()
+    phoneNumber: Joi.string().min(3).max(20)
         .pattern(/^\+?[0-9]{10,15}$/)
         .required()
         .messages({
@@ -19,7 +19,7 @@ export const contactSchema = Joi.object({
             'any.required': 'Phone number is required.'
         }),
 
-    email: Joi.string()
+    email: Joi.string().min(3).max(20)
         .email()
         .required()
         .messages({
@@ -36,7 +36,7 @@ export const contactSchema = Joi.object({
             'any.required': 'Favourite field is required.'
         }),
 
-    contactType: Joi.string()
+    contactType: Joi.string().min(3).max(20)
         .valid('work', 'personal')
         .required()
         .messages({
