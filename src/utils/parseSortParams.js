@@ -21,12 +21,12 @@ const parseSortBy = (sortBy)=>{
         return '_id';
     }
 }
-export const parseSortParams = (query)=>{
-    const { sortOrder= SORT_ORDER.ASC, sortBy='_id' } = query;
-    const parsedSortOrder=parseSortOrder(sortOrder);
-    const parsedSortBy=parseSortBy(sortBy);
-    return{
-        sortOrder: parsedSortOrder,
-        sortBy:parsedSortBy,
-    }
+export const parseSortParams = (query={})=>{
+    const sortOrder = typeof query.sortOrder !== 'undefined' ? query.sortOrder : SORT_ORDER.ASC;
+    const sortBy = typeof query.sortBy !== 'undefined' ? query.sortBy : '_id';
+
+    return {
+        sortOrder: parseSortOrder(sortOrder),
+        sortBy: parseSortBy(sortBy),
+    };
 }

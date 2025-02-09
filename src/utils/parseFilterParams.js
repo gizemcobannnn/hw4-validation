@@ -1,13 +1,14 @@
 // src/utils/parseFilterParams.js
 
-const parseGender = (gender) => {
-    const isString = typeof gender === 'string';
+const parseType = (type) => {
+    const isString = typeof type === 'string';
     if (!isString) return;
-    const isGender = (gender) => ['male', 'female', 'other'].includes(gender);
+    const isType = (type) => ['personal', 'home', 'other'].includes(type);
   
-    if (isGender(gender)) return gender;
+    if (isType(type)) return type;
   };
   
+  // eslint-disable-next-line no-unused-vars
   const parseNumber = (number) => {
     const isString = typeof number === 'string';
     if (!isString) return;
@@ -21,20 +22,13 @@ const parseGender = (gender) => {
   };
   
   export const parseFilterParams = (query) => {
-    const { gender, maxAge, minAge, maxAvgMark, minAvgMark } = query;
-  
-    const parsedGender = parseGender(gender);
-    const parsedMaxAge = parseNumber(maxAge);
-    const parsedMinAge = parseNumber(minAge);
-    const parsedMaxAvgMark = parseNumber(maxAvgMark);
-    const parsedMinAvgMark = parseNumber(minAvgMark);
-  
+    const { name, type, createdDate, updatedDate } = query;
+
     return {
-      gender: parsedGender,
-      maxAge: parsedMaxAge,
-      minAge: parsedMinAge,
-      maxAvgMark: parsedMaxAvgMark,
-      minAvgMark: parsedMinAvgMark,
+        name: parseType(name),
+        type: parseType(type),
+        createdDate: parseType(createdDate),
+        updatedDate: parseType(updatedDate),
     };
-  };
+};
       
