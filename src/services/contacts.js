@@ -1,27 +1,31 @@
 import { ContactsCollection } from '../db/contacts.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
-//getAllContacts getContactById
-export const getAllContacts = async ({ page = 1, perPage = 10, sortOrder = SORT_ORDER.ASC, sortBy = '_id', filter = {} }) => {
+
+export const getAllContacts = async ({ page = 1, perPage = 10, sortOrder = SORT_ORDER.ASC, sortBy = '_id', filter }) => {
   const limit = Math.max(1, perPage); 
   const skip = Math.max(0, (page - 1) * limit);
   const order = sortOrder === SORT_ORDER.DESC ? -1 : 1;
-  const filterQuery = filter && typeof filter === 'object' ? filter : {};
+
+  const filterQuery = Object.fromEntries(
+    // eslint-disable-next-line no-unused-vars
+    Object.entries(filter).filter(([_, value]) => value !== null)
+  ); 
 
   const contactsCount = await ContactsCollection.countDocuments(filterQuery);
   const contacts = await ContactsCollection.find(filterQuery)
-    .skip(skip)
-    .limit(limit)
-    .sort({ [sortBy || '_id']: order });
+      .skip(skip)
+      .limit(limit)
+      .sort({ [sortBy]: order });
 
   const paginationData = calculatePaginationData(contactsCount, page, limit);
 
   return {
-    data: contacts,
-    ...paginationData
+      data: contacts,
+      ...paginationData
   };
-
 };
+
 
 export const getContactById = async (contactId) => {
   const contact = await ContactsCollection.findById(contactId);
